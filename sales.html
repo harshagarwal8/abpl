@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <title>Purchase Amount Form</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.1/canvg.min.js" integrity="sha512-IqDpl6qmu6Tc4K1q6v/98X61sOBLurjwtOxA9K5eFJaEmX9fCeCiBq8PYer1QzAGQED25S2LEeSFOINo8O4S0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind&display=swap" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<style>
+    #result {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    text-align: left;
+    font-size: 25px;
+    font-family: 'Hind', sans-serif;
+    color: rgb(30, 32, 35);
+    line-height: 2;
+    border: 2px solid;
+    background: linear-gradient(to bottom, lightblue, rgb(97, 152, 162));
+
+    @media (min-width: 600px) {
+        /* For devices with viewport width 600px and above, use a larger font size and div width */
+        #result {
+            font-size: 25px;
+            width: 60%;
+        }
+
+        #purchaseForm {
+            width: 60%;
+        }
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <form id="purchaseForm" class="mt-5">
+            <div class="form-group">
+                <label for="purchaseAmount2023">Purchase Amount 2023:</label>
+                <input type="text" id="purchaseAmount2023" name="purchaseAmount2023" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="purchaseAmount2024">Purchase Amount 2024:</label>
+                <input type="text" id="purchaseAmount2024" name="purchaseAmount2024" class="form-control">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+        </form>
+        <button id="download" class="btn btn-secondary mt-3" onclick="download()">Download</button>
+        <div id="result" class="card mt-5 p-3"></div>
+    </div>
+    <script>
+        function createText(purchaseAmount2023, purchaseAmount2024) {
+            
+            return `
+            महोदय, 
+            <br>
+            अप्रैल 2023 में आपकी खरीद ₹ ${purchaseAmount2023}/- थी एवं अप्रैल 2024 में कुल खरीद ₹ ${purchaseAmount2024}/- रही है |
+            <br>
+            अतः आपको एक प्रोत्साहन गिफ्ट भेजा जा रहा है |
+            <br>
+            कृपया मई माह में भी 2023 की तुलना में 10% बढ़ती हुई खरीद करें |
+            <br>
+            अग्रबन्धु फुटवियर्स प्रा० लि० `;
+        }
+
+        function submitForm() {
+            var purchaseAmount2023 = document.getElementById('purchaseAmount2023').value;
+            var purchaseAmount2024 = document.getElementById('purchaseAmount2024').value;
+            var result = createText(purchaseAmount2023, purchaseAmount2024);
+            var resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = result;
+        }
+
+        // function download() {
+        //     var node = document.getElementById('result');
+
+        //     domtoimage.toSvg(node)
+        //         .then(function (dataUrl) {
+        //             var img = new Image();
+        //             img.onload = function() {
+        //             var canvas = document.createElement('canvas');
+        //             canvas.width = img.naturalWidth;
+        //             canvas.height = img.naturalHeight;
+        //             var ctx = canvas.getContext('2d');
+        //             ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+        //             var pngUrl = canvas.toDataURL("image/png");
+                    
+        //             var link = document.createElement('a');
+        //             var timestamp = new Date().getTime();
+        //             link.download = timestamp + '.png';
+        //             link.href = pngUrl;  
+        //             link.click();
+        //         }
+        //             img.src = dataUrl;
+        //         })
+        //         .catch(function (error) {
+        //             console.error('oops, something went wrong!', error);
+        //         });
+        // }  
+        
+        function download() {
+            var node = document.getElementById('result');
+
+            // Save the current class
+            var oldClass = node.className;
+
+            // Remove the class
+            node.className = '';
+
+            domtoimage.toPng(node)
+                .then(function (dataUrl) {
+                    // Restore the class
+                    node.className = oldClass;
+
+                    var link = document.createElement('a');
+                    var timestamp = new Date().getTime();
+                    link.download = timestamp + '.png';
+                    link.href = dataUrl;
+                    link.click();
+                })
+                .catch(function (error) {
+                    // Restore the class in case of an error
+                    node.className = oldClass;
+
+                    console.error('oops, something went wrong!', error);
+                });
+        }
+    
+    </script>
+</body>
+</html>
